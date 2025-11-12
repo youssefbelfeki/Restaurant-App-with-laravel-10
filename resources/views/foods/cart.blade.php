@@ -15,47 +15,52 @@
             </div>
         </div>
          
-            <div class="container">
-                @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-                @endif
-                <div class="col-md-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Image</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($cartItem ->isEmpty())
-                                <tr>
-                                    <td colspan="4" class="text-center">Your cart is empty.</td>
-                                </tr>
-                            @else
-                                 @foreach ($cartItem as $item)
-                                <tr>
-                                <th><img height="60px" width="60px" src="{{asset('img/'.$item->image)}}" /></th>
-                                <td>{{$item->name}}</td>
-                                <td>${{$item->price}}</td>
-                                <td><a href="{{route('deleteItem',$item->food_id)}}" class="btn btn-danger text-white">delete</td>
-                            </tr>
-                            @endforeach
-                            @endif
-                        </tbody>
-                    </table>
-                    @if (!$cartItem -> isEmpty())
-                        <div class="position-relative mx-auto" style="max-width: 400px; padding-left: 679px;">
-                        <p style="margin-left: -7px;" class="w-19 py-3 ps-4 pe-5" type="text"> Total: ${{$totalPrice}}</p>
-                        <button type="button" class="btn btn-primary py-2 top-0 end-0 mt-2 me-2">Checkout</button>
-                    </div> 
-                    @endif
-                   
-                </div>
+        <div class="container">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
+            @endif
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if ($cartItem ->isEmpty())
+                            <tr>
+                                <td colspan="4" class="text-center">Your cart is empty.</td>
+                            </tr>
+                        @else
+                                @foreach ($cartItem as $item)
+                            <tr>
+                            <th><img height="60px" width="60px" src="{{asset('img/'.$item->image)}}" /></th>
+                            <td>{{$item->name}}</td>
+                            <td>${{$item->price}}</td>
+                            <td><a href="{{route('deleteItem',$item->food_id)}}" class="btn btn-danger text-white">delete</td>
+                        </tr>
+                        @endforeach
+                        @endif
+                    </tbody>
+                </table>
+                @if (!$cartItem -> isEmpty())
+                    <div class="position-relative mx-auto" style="max-width: 400px; padding-left: 679px;">
+                    <p style="margin-left: -7px;" class="w-19 py-3 ps-4 pe-5" type="text"> Total: ${{$totalPrice}}</p>
+                    <form action="{{route('prepare_checkout')}}" method="POST">
+                        @csrf
+                        <input type="hidden" name="price" value="{{$totalPrice}}">
+                        <button type="submit" class="btn btn-primary py-2 top-0 end-0 mt-2 me-2">Checkout</button>
+                    </form>
+                    
+                </div> 
+                @endif
+                
+            </div>
+        </div>
 
 @endsection

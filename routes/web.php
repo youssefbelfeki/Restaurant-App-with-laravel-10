@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Foods\FoodsController;
+use App\Http\Controllers\Users\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,16 +16,47 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('foods/food-details/{id}', [App\Http\Controllers\Foods\FoodsController::class, 'foodDetails'])->name('foodDetails');
+Route::get('/about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
+Route::get('/services', [App\Http\Controllers\HomeController::class, 'service'])->name('service');
+Route::get('/contact-us', [App\Http\Controllers\HomeController::class, 'contact'])->name('contact');
 
-//Cart Route
-Route::post('foods/food-details/{id}', [App\Http\Controllers\Foods\FoodsController::class, 'cart'])->name('foodCart');
-Route::get('foods/cart', [App\Http\Controllers\Foods\FoodsController::class, 'displayCart'])->name('displayCart');
-Route::get('foods/cart/{id}', [App\Http\Controllers\Foods\FoodsController::class, 'deleteItem'])->name('deleteItem');
+Route::group(["prefix" => "foods"], function () {
+    //food details route
+    Route::get('/food-details/{id}', [FoodsController::class, 'foodDetails'])->name('foodDetails');
+
+    //Cart route
+    Route::post('/food-details/{id}', [FoodsController::class, 'cart'])->name('foodCart');
+    Route::get('/cart', [FoodsController::class, 'displayCart'])->name('displayCart');
+    Route::get('/cart/{id}', [FoodsController::class, 'deleteItem'])->name('deleteItem');
+
+    //checkout route
+    Route::post('/prepare_checkout', [FoodsController::class, 'prepareCheckout'])->name('prepare_checkout');
+
+    //insert user info route
+    Route::get('/checkout', [FoodsController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [FoodsController::class, 'storeCheckout'])->name('prepare_checkout-store');
+
+    //payment with paypal route
+    Route::get('/pay', [FoodsController::class, 'payWithPaypal'])->name('payWithPaypal');
+    Route::get('/success', [FoodsController::class, 'success'])->name('success');
+
+    //booking route
+    Route::post('/booking', [FoodsController::class, 'bookingTables'])->name('bookingTables');
+
+    //menu route
+    Route::get('foods/menu', [FoodsController::class, 'foodMenu'])->name('foodMenu');
+});
+
+Route::group(["prefix" => "users"], function () {
+    //menu route
+    Route::get('/all-bookings', [UsersController::class, 'getBooking'])->name('getBooking');
+    Route::get('/all-orders', [UsersController::class, 'getOrders'])->name('getOrders');
+    //review route
+    Route::get('/review', [UsersController::class, 'viewReview'])->name('viewReview');
+    Route::post('/review', [UsersController::class, 'storeReview'])->name('storeReview');
+});
