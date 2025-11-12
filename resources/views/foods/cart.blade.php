@@ -51,7 +51,12 @@
                     @if (!$cartItem -> isEmpty())
                         <div class="position-relative mx-auto" style="max-width: 400px; padding-left: 679px;">
                         <p style="margin-left: -7px;" class="w-19 py-3 ps-4 pe-5" type="text"> Total: ${{$totalPrice}}</p>
-                        <button type="button" class="btn btn-primary py-2 top-0 end-0 mt-2 me-2">Checkout</button>
+                        <form action="{{route('prepare_checkout')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="price" value="{{$totalPrice}}">
+                            <button type="submit" class="btn btn-primary py-2 top-0 end-0 mt-2 me-2">Checkout</button>
+                        </form>
+                        
                     </div> 
                     @endif
                    
