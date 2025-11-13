@@ -39,7 +39,7 @@
         <!-- Navbar & Hero Start -->
         <div class="container-xxl position-relative p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-                <a href="{{ url('/') }}" class="navbar-brand p-0">
+                <a href="{{route('home')}}" class="navbar-brand p-0">
                     <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>Restoran</h1>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -48,11 +48,11 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto py-0 pe-4">
                         <a href="{{route('home')}}" class="nav-item nav-link active">Home</a>
-                        <a href="about.html" class="nav-item nav-link">About</a>
-                        <a href="service.html" class="nav-item nav-link">Service</a>
-                        <a href="menu.html" class="nav-item nav-link">Menu</a>
+                        <a href="{{route('about')}}" class="nav-item nav-link">About</a>
+                        <a href="{{route('service')}}" class="nav-item nav-link">Service</a>
+                        <a href="{{route('foodMenu')}}" class="nav-item nav-link">Menu</a>
                         {{-- <a href="{{route('displayCart')}}" class="nav-item nav-link"><i class="fa-sharp fa-solid fa-cart-shopping"></i>Cart</a> --}}
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="{{route('contact')}}" class="nav-item nav-link">Contact</a>
                         <ul class="navbar-nav ms-auto">
                             @guest
                                 @if (Route::has('login'))
@@ -68,6 +68,8 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a href="{{route('getBooking')}}" class="dropdown-item"><i class="fa-sharp fa-solid fa-cart-shopping"></i>My Booking</a>
+                                        <a href="{{route('getOrders')}}" class="dropdown-item"><i class="fa-sharp fa-solid fa-cart-shopping"></i>My Orders</a>
                                         <a href="{{route('displayCart')}}" class="dropdown-item"><i class="fa-sharp fa-solid fa-cart-shopping"></i>Cart</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();

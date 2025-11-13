@@ -17,8 +17,13 @@ class FoodsController extends Controller
     public function foodDetails($id)
     {
         $foodDetails = Food::findorfail($id);
-        $cartVerify = Cart::where('food_id', $id)->where('user_id', Auth::user()->id)->count();
-        return view('foods.food-details', compact('foodDetails', 'cartVerify'));
+        if (Auth::user()) {
+            
+            $cartVerify = Cart::where('food_id', $id)->where('user_id', Auth::user()->id)->count();
+            return view('foods.food-details', compact('foodDetails', 'cartVerify'));
+        }else {
+            return view('foods.food-details', compact('foodDetails'));
+        }
     }
 
     public function cart(Request $request)
@@ -147,5 +152,18 @@ class FoodsController extends Controller
         if ($booking) {
             return redirect()->back()->with('success', 'you booked a table successfully');
         }
+    }
+
+
+    public function foodMenu()
+    {
+        $breakfast = Food::select()->take(4)
+            ->where('category', 'breakfast')->get();
+        $lunchFoods = Food::select()->take(4)
+            ->where('category', 'launch')->get();
+        $dinnerFoods = Food::select()->take(4)
+            ->where('category', 'dinner')->get();
+
+        return view('foods.menu', compact('breakfast', 'lunchFoods', 'dinnerFoods'));
     }
 }
