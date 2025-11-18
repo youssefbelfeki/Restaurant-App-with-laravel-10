@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Foods\FoodsController;
 use App\Http\Controllers\Users\UsersController;
+use App\Http\Controllers\Admins\AdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -59,4 +60,16 @@ Route::group(["prefix" => "users"], function () {
     //review route
     Route::get('/review', [UsersController::class, 'viewReview'])->name('viewReview');
     Route::post('/review', [UsersController::class, 'storeReview'])->name('storeReview');
+});
+
+Route::get('admin/login', [AdminController::class, 'viewLogin'])->name('viewLogin')->middleware('checkForAuth');
+Route::post('admin/login', [AdminController::class, 'checkLogin'])->name('checkLogin');
+
+Route::group(["prefix" => "admin", "middleware" => "auth:admin"], function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    //admins
+    Route::get('/all-admins', [AdminController::class, 'allAdmin'])->name('allAdmin');
+    Route::get('/new-admins', [AdminController::class, 'newAdmin'])->name('newAdmin');
+    Route::post('/new-admins', [AdminController::class, 'createNewAdmin'])->name('createNewAdmin');
 });
