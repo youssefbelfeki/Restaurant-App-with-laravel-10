@@ -69,7 +69,22 @@ Route::group(["prefix" => "admin", "middleware" => "auth:admin"], function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     //admins
-    Route::get('/all-admins', [AdminController::class, 'allAdmin'])->name('allAdmin');
-    Route::get('/new-admins', [AdminController::class, 'newAdmin'])->name('newAdmin');
+    Route::get('all-admins', [AdminController::class, 'allAdmin'])->name('allAdmin');
+    Route::get('new-admins', [AdminController::class, 'newAdmin'])->name('newAdmin');
     Route::post('/new-admins', [AdminController::class, 'createNewAdmin'])->name('createNewAdmin');
+
+    //orders
+    Route::get('all-orders', [AdminController::class, 'allOrders'])->name('allOrders');
+    Route::get('edit-orders/{id}', [AdminController::class, 'EditOrder'])->name('EditOrder');
+    Route::post('edit-orders/{id}', [AdminController::class, 'UpdateOrder'])->name('UpdateOrder');
+    Route::get('delete-orders/{id}', [AdminController::class, 'DeleteOrder'])->name('DeleteOrder');
+
+    //booking
+    Route::get('all-booking', [AdminController::class, 'allBooking'])->name('allBooking');
+
+    //foods
+    Route::get('all-foods', [AdminController::class, 'allFoods'])->name('allFoods');
+    Route::get('create-food', [AdminController::class, 'createFood'])->name('createFood');
+    Route::post('create-food', [AdminController::class, 'storeFood'])->name('storeFood');
+    Route::get('delete-food/{id}', [AdminController::class, 'DeleteFood'])->name('deleteFood');
 });
