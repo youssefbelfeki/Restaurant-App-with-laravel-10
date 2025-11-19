@@ -1,156 +1,115 @@
-# Restaurant Application
+## Restaurant Application
 
 A modern restaurant management system built with Laravel.
 
-## About The Project
+## Summary
 
-Restaurant Application is a web-based platform built using the Laravel framework. It provides a comprehensive solution for restaurant management including menu management, order processing, and customer management.
+This repository implements a basic restaurant web application with user and admin areas. Main capabilities include menu/food management, cart & checkout, PayPal payment flow scaffolding, bookings, reviews, and a simple admin panel for managing foods, orders and bookings.
 
-## Getting Started
+## Quick Start (Windows / PowerShell)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Open PowerShell and run these commands from the project root (`c:\wamp64\www\RestaurantApp`):
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-### Prerequisites
-
-Before you begin, ensure you have the following installed:
-- PHP >= 8.1
-- Composer
-- Node.js & NPM
-- WAMP/XAMPP/MAMP (or any local development server)
-- MySQL
-
-### Installation Steps
-
-1. Clone the repository:
-```bash
-git clone [your-repository-url]
-cd RestaurantApp
-```
-
-2. Install PHP dependencies:
-```bash
+```powershell
+# 1) Install PHP dependencies
 composer install
-```
 
-3. Install NPM dependencies:
-```bash
+# 2) Install JS dependencies
 npm install
-```
 
-4. Create environment file:
-```bash
-cp .env.example .env
-```
-
-5. Generate application key:
-```bash
+# 3) Copy env and set app key
+copy .env.example .env
 php artisan key:generate
-```
 
-6. Configure your database in `.env` file:
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=restaurant_app
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-7. Run database migrations:
-```bash
+# 4) Configure your DB in .env, then run migrations
 php artisan migrate
-```
 
-8. Start the development server:
-```bash
+# 5) Build assets (dev)
+npm run dev
+
+# 6) Serve app
 php artisan serve
 ```
 
-9. Compile assets:
-```bash
-npm run dev
+If Git commit identity is not set locally, configure it before committing:
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
 
-## Project Structure
+## Features (detailed)
 
-The project follows Laravel's standard structure with some additional organization:
+- Authentication & Authorization
+	- Web user registration, login, password reset and email verification (via Laravel auth controllers).
+	- Admin authentication using a separate admin guard and dedicated admin login.
 
-```
-app/
-├── Http/
-│   ├── Controllers/    # Application controllers
-│   └── Middleware/     # HTTP middleware
-├── Models/            # Eloquent models
-└── Providers/        # Service providers
-database/
-├── migrations/       # Database migrations
-├── factories/       # Model factories
-└── seeders/        # Database seeders
-resources/
-├── views/          # Blade templates
-├── js/            # JavaScript files
-└── css/           # CSS files
-routes/
-├── web.php        # Web routes
-└── api.php        # API routes
-```
+- Public pages
+	- Home, About, Services, Contact pages and navigation.
 
-## Development
+- Food & Menu
+	- `Food` model with image upload, description, price and `category` (breakfast, launch, dinner).
+	- Food details page with 'Add to cart' functionality.
 
-For local development:
+- Cart & Checkout
+	- `Cart` model to store selected items per-user.
+	- Session-based price handling for checkout flow and `Checkout` model persistence.
+	- PayPal payment view endpoints (`payWithPaypal`, `success`) — integration scaffold.
 
-1. Run the development server:
-```bash
-php artisan serve
-```
+- Orders
+	- Users: view their own `Checkout` orders.
+	- Admins: view, edit and delete orders in admin panel.
 
-2. Watch for asset changes:
-```bash
-npm run dev
-```
+- Bookings (Reservations)
+	- Users can book tables; `Booking` uses Carbon for date validation (future-only bookings).
+	- Admin panel lists all bookings.
 
-## Testing
+- Reviews
+	- Users can submit short reviews stored via `Review` model.
 
-Run the tests using PHPUnit:
-```bash
-php artisan test
-```
+- Admin panel
+	- Dashboard with counts for foods, orders, bookings and admins.
+	- Food management (create with image upload, list, delete with image file removal).
+	- Admin user creation and listing.
 
-## Contributing
+- Models included
+	- `App\Models\Food\Food`, `Cart`, `Checkout`, `Booking`, `Review`
+	- `App\Models\User` and `App\Models\Admin\Admin` (admin users)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Routes (high-level)
 
-## Code of Conduct
+- Public routes: `home`, `about`, `service`, `contact`
+- Food routes (prefix `foods`):
+	- `/foods/menu` — list categories
+	- `/foods/food-details/{id}` — view and add to cart
+	- `/foods/cart` — view cart
+	- `/foods/checkout` — checkout form
+	- `/foods/pay`, `/foods/success` — payment flow views
+	- `/foods/booking` — booking endpoint
+- User routes (prefix `users`):
+	- `/users/all-bookings`, `/users/all-orders`, `/users/review`
+- Admin routes (guarded by admin auth): dashboard, `allFoods`, `allOrders`, `allBooking`, admin management
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Check `routes/web.php` for exact route definitions and controller method mappings.
 
-## Features
+## Notes & Recommendations
 
-Current features include:
-- User Authentication
-- Restaurant Menu Management
-- Order Processing
-- Customer Management
-- [More features to be added]
+- Security & validation: Controller methods perform basic validation. For production, ensure stricter validation, CSRF protection and sanitized inputs where needed.
+- Payments: PayPal endpoints are view-based scaffolding — integrate the real PayPal SDK or Laravel Cashier for production payments.
+- File storage: Images are stored in `public/img/`. Consider using Laravel's Storage facade and a cloud provider for production.
+- Tests: Add feature/unit tests to cover booking, checkout and admin flows.
 
-## Security
+## How to contribute
 
-If you discover any security vulnerabilities within the application, please create an issue or contact the repository maintainer.
+1. Fork the repo and create a feature branch.
+2. Add tests for your change.
+3. Open a pull request with a clear description.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
 
-## Acknowledgments
+## Contact
 
-- Built with [Laravel](https://laravel.com)
-- Utilizing [Laravel Documentation](https://laravel.com/docs)
+Project owner: `youssefbelfeki` (repository owner)
+
